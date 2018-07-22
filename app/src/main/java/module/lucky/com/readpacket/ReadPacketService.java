@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -20,6 +21,7 @@ public class ReadPacketService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        init();
         int eventType = event.getEventType();
         Log.i("TAGS", event.getPackageName().toString());
         switch (eventType) {
@@ -156,4 +158,14 @@ public class ReadPacketService extends AccessibilityService {
     @Override
     public void onInterrupt() {
     }
+
+    private void init(){
+        PowerManager powerManager = (PowerManager)getSystemService(POWER_SERVICE);
+        if (powerManager != null) {
+         PowerManager.WakeLock mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "WakeLock");
+            mWakeLock.acquire();
+        }
+
+    }
+
 }
